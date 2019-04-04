@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -25,6 +26,10 @@ namespace MRMongoTools.Extensions.Identity.Service
             services.AddTransient<MRRoleManager>();
             services.AddTransient<MRUserManager>();
             services.AddTransient<MRSignInManager>();
+
+            services.AddSingleton<MRTokenManager>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
