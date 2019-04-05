@@ -11,7 +11,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using MREntityState = MRMongoTools.Infrastructure.Enum.EntityState;
 
 namespace MRMongoTools.Extensions.Identity.Store
 {

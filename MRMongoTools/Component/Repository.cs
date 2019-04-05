@@ -29,7 +29,7 @@ namespace MRMongoTools.Component
             _client = client;
             _database = database;
 
-            var collectionAttr = (CollectionAttr)Attribute.GetCustomAttribute(typeof(CollectionAttr), typeof(T));
+            var collectionAttr = (CollectionAttr)Attribute.GetCustomAttribute(typeof(T), typeof(CollectionAttr));
             var collectionName = collectionAttr == null && !string.IsNullOrWhiteSpace(collectionAttr.Name) ? nameof(T) : collectionAttr.Name;
 
             _collection = _database.GetCollection<T>(collectionName);

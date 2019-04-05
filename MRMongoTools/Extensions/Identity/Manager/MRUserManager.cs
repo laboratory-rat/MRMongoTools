@@ -11,7 +11,7 @@ namespace MRMongoTools.Extensions.Identity.Manager
     public class MRUserManager : UserManager<MRUser>
     {
         public MRUserManager(
-            IMRUserStore<MRUser> store,
+            IMRUserStore store,
             IOptions<IdentityOptions> optionsAccessor,
             IPasswordHasher<MRUser> passwordHasher,
             IEnumerable<IUserValidator<MRUser>> userValidators,

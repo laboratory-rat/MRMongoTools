@@ -2,6 +2,7 @@
 using MRMongoTools.Component;
 using MRMongoTools.Extensions.Identity.Component;
 using MRMongoTools.Extensions.Identity.Interface;
+using MRMongoTools.Infrastructure.Settings;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,11 +11,11 @@ namespace MRMongoTools.Extensions.Identity.Store
 {
     public class MRRoleStore : Repository<MRRole>, IMRRoleStore
     {
-        public MRRoleStore(string connection, string database) : base(connection, database) { }
+        public MRRoleStore(MRDatabaseConnectionSettings settings) : base(settings.ConnectionString, settings.Database) { }
 
         public async Task<IdentityResult> CreateAsync(MRRole role, CancellationToken cancellationToken)
         {
-            var exists = await Any(x => x.NormalizedName == role.Name.ToUpperInvariant());
+            var exists = await Any(x => x.NormalizedName == role.NormalizedName);
             if (exists)
             {
                 return IdentityResult.Failed(new IdentityError[] { new IdentityError
