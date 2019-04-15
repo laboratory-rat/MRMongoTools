@@ -13,7 +13,6 @@ namespace MRMongoTools.Extensions.Identity.Interface
         IUserClaimStore<U>,
         IUserPasswordStore<U>,
         IUserEmailStore<U>,
-        IUserSecurityStampStore<U>,
         IUserTwoFactorStore<U>,
         IUserRoleStore<U>
         where U : MRUser, new()

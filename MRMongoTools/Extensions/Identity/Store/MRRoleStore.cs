@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MRMongoTools.Extensions.Identity.Store
 {
-    public class MRRoleStore : Repository<MRRole>, IMRRoleStore
+    public class MRRoleStore : MRRepository<MRRole>, IMRRoleStore
     {
         public MRRoleStore(MRDatabaseConnectionSettings settings) : base(settings.ConnectionString, settings.Database) { }
 

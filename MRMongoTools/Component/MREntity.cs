@@ -6,7 +6,7 @@ using System;
 
 namespace MRMongoTools.Component
 {
-    public abstract class Entity : IEntity
+    public abstract class MREntity : IEntity
     {
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }

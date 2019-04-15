@@ -8,19 +8,20 @@ using MRMongoTools.Extensions.Identity.Interface;
 
 namespace MRMongoTools.Extensions.Identity.Manager
 {
-    public class MRUserManager : UserManager<MRUser>
+    public class MRUserManager<TUser> : UserManager<TUser>
+        where TUser : MRUser, new()
     {
         public MRUserManager(
-            IMRUserStore store,
+            IMRUserStore<TUser> store,
             IOptions<IdentityOptions> optionsAccessor,
-            IPasswordHasher<MRUser> passwordHasher,
-            IEnumerable<IUserValidator<MRUser>> userValidators,
-            IEnumerable<IPasswordValidator<MRUser>> passwordValidators,
+            IPasswordHasher<TUser> passwordHasher,
+            IEnumerable<IUserValidator<TUser>> userValidators,
+            IEnumerable<IPasswordValidator<TUser>> passwordValidators,
             ILookupNormalizer keyNormalizer,
             IdentityErrorDescriber errors, 
             IServiceProvider services,
-            ILogger<UserManager<MRUser>> logger) 
-                : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
+            ILogger<UserManager<TUser>> logger) 
+                : base(store, null, passwordHasher, null, null, keyNormalizer, null, services, logger)
         {
         }
     }

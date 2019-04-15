@@ -9,7 +9,8 @@ using System.Security.Claims;
 
 namespace MRMongoTools.Extensions.Identity.Manager
 {
-    public class MRTokenManager
+    public class MRTokenManager<TUser>
+        where TUser : MRUser, new()
     {
         protected readonly MRTokenSettings _settings;
 
@@ -18,7 +19,7 @@ namespace MRMongoTools.Extensions.Identity.Manager
             _settings = settings;
         }
 
-        public virtual string Generate(MRUser user, IEnumerable<string> roles)
+        public virtual Tuple<string, DateTime> Generate(TUser user, IEnumerable<string> roles)
         {
             var identity = GetIdentity(user, roles);
 
@@ -33,10 +34,10 @@ namespace MRMongoTools.Extensions.Identity.Manager
                 claims: identity.Claims,
                 signingCredentials: new SigningCredentials(MRTokenSettings.GetSymmetricSecurityKey(_settings.Key), SecurityAlgorithms.HmacSha256));
 
-            return new JwtSecurityTokenHandler().WriteToken(jwt);
+            return new Tuple<string, DateTime>(new JwtSecurityTokenHandler().WriteToken(jwt), expires);
         }
 
-        protected virtual ClaimsIdentity GetIdentity(MRUser user, IEnumerable<string> roles)
+        public virtual List<Claim> GetClaims(TUser user, IEnumerable<string> roles)
         {
             var claims = new List<Claim>
             {
@@ -44,7 +45,7 @@ namespace MRMongoTools.Extensions.Identity.Manager
                 new Claim(MRClaimSettings.ID, user.Id)
             };
 
-            if(roles != null && roles.Any())
+            if (roles != null && roles.Any())
             {
                 foreach (var role in roles)
                 {
@@ -52,7 +53,10 @@ namespace MRMongoTools.Extensions.Identity.Manager
                 }
             }
 
-            return new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+            return claims;
         }
+
+        protected virtual ClaimsIdentity GetIdentity(TUser user, IEnumerable<string> roles)
+            => new ClaimsIdentity(GetClaims(user, roles), "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
     }
 }

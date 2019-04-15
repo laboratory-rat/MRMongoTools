@@ -6,7 +6,7 @@ using MRMongoTools.Infrastructure.Interface;
 namespace MRMongoTools.Extensions.Identity.Component
 {
     [CollectionAttr("Role")]
-    public class MRRole : Entity, IEntity, IRole
+    public class MRRole : MREntity, IEntity, IRole
     {
         public string Name { get; set; }
         public string NormalizedName { get; set; }

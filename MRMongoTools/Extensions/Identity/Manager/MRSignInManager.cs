@@ -7,9 +7,10 @@ using MRMongoTools.Extensions.Identity.Component;
 
 namespace MRMongoTools.Extensions.Identity.Manager
 {
-    public class MRSignInManager : SignInManager<MRUser>
+    public class MRSignInManager<TUser> : SignInManager<TUser>
+        where TUser : MRUser, new()
     {
-        public MRSignInManager(MRUserManager userManager, IHttpContextAccessor contextAccessor, IUserClaimsPrincipalFactory<MRUser> claimsFactory, IOptions<IdentityOptions> optionsAccessor, ILogger<SignInManager<MRUser>> logger, IAuthenticationSchemeProvider schemes) : base(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemes)
+        public MRSignInManager(MRUserManager<TUser> userManager, IHttpContextAccessor contextAccessor, IUserClaimsPrincipalFactory<MRUser> claimsFactory, IOptions<IdentityOptions> optionsAccessor, ILogger<SignInManager<TUser>> logger, IAuthenticationSchemeProvider schemes) : base(userManager, contextAccessor, null, optionsAccessor, logger, schemes)
         {
         }
     }

@@ -8,7 +8,7 @@ namespace MRMongoTools.Extensions.Identity.Settings
         /// <summary>
         /// Issuer
         /// </summary>
-        public string Issuer;
+        public string Issuer { get; set; }
 
         /// <summary>
         /// Validate issuer
@@ -18,17 +18,17 @@ namespace MRMongoTools.Extensions.Identity.Settings
         /// <summary>
         /// Audience
         /// </summary>
-        public string Audience;
+        public string Audience { get; set; }
 
         /// <summary>
         /// Key
         /// </summary>
-        public string Key;
+        public string Key { get; set; }
 
         /// <summary>
         /// Lifetimes (in minutes)
         /// </summary>
-        public int Lifetime;
+        public int Lifetime { get; set; }
 
         /// <summary>
         /// Require https
@@ -38,13 +38,14 @@ namespace MRMongoTools.Extensions.Identity.Settings
         /// <summary>
         /// Validate lifetime
         /// </summary>
-        public bool ValidateLifetime { get; internal set; }
+        public bool ValidateLifetime { get; set; }
 
         /// <summary>
         /// Validate audience
         /// </summary>
-        public bool ValidateAudience { get; internal set; }
-        public bool ValidateSigningKey { get; internal set; }
+        public bool ValidateAudience { get; set; }
+
+        public bool ValidateSigningKey { get; set; }
 
         public static SymmetricSecurityKey GetSymmetricSecurityKey(string key)
             => new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));

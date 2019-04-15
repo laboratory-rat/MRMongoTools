@@ -15,20 +15,25 @@ namespace MRMongoTools.Extensions.Identity.Service
 {
     public static class ServiceStartup
     {
-        public static void AddMRMongoIdentity(this IServiceCollection services, MRDatabaseConnectionSettings settings, MRTokenSettings tokenSettings, Action<IdentityOptions> userSignupActions = null)
+        public static void AddMRMongoIdentity
+            <TUser, TUserStore, TUserManager>(this IServiceCollection services, MRDatabaseConnectionSettings settings, MRTokenSettings tokenSettings, Action<IdentityOptions> userSignupActions = null)
+            where TUser : MRUser, new()
+            where TUserStore : MRUserStore<TUser>
+            where TUserManager : MRUserManager<TUser>
         {
             services.AddSingleton(settings);
             services.AddSingleton(tokenSettings);
 
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddTransient<IMRUserStore, MRUserStore>();
+            services.AddTransient<IMRUserStore<TUser>, TUserStore>();
             services.AddTransient<IMRRoleStore, MRRoleStore>();
+            services.AddTransient<IUserValidator<TUser>, MRUserValidator<TUser>>();
 
             services.AddTransient<MRRoleManager>();
-            services.AddTransient<MRUserManager>();
-            services.AddTransient<MRSignInManager>();
-            services.AddSingleton<MRTokenManager>();
+            services.AddTransient<TUserManager>();
+            services.AddTransient<MRSignInManager<TUser>>();
+            services.AddSingleton<MRTokenManager<TUser>>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -46,8 +51,12 @@ namespace MRMongoTools.Extensions.Identity.Service
                     };
                 });
 
-            userSignupActions = userSignupActions ?? new Action<IdentityOptions>((a) => { });
-            services.AddIdentityCore<MRUser>(userSignupActions);
+            userSignupActions = userSignupActions ?? new Action<IdentityOptions>((a) => {
+                a.User.RequireUniqueEmail = true;
+            });
+
+            services.AddIdentityCore<TUser>(userSignupActions)
+                .AddDefaultTokenProviders();
         }
     }
 }

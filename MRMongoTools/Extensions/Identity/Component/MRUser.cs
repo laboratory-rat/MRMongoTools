@@ -6,13 +6,14 @@ using MRMongoTools.Component;
 using MRMongoTools.Extensions.Identity.Enum;
 using MRMongoTools.Infrastructure.Attr;
 using MRMongoTools.Infrastructure.Interface;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace MRMongoTools.Extensions.Identity.Component
 {
     [CollectionAttr("User")]
-    public class MRUser : Entity, IEntity, IUser
+    public class MRUser : MREntity, IEntity, IUser
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -40,7 +41,7 @@ namespace MRMongoTools.Extensions.Identity.Component
         public List<MRUserRole> Roles { get; set; } = new List<MRUserRole>();
 
         public string PasswordHash { get; set; }
-        public string SecurityStamp { get; set; }
+        public string SecurityStamp { get; set; } = Guid.NewGuid().ToString();
         public bool TwoFactorEnabled { get; set; }
     }
 }

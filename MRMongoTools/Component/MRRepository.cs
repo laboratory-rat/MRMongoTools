@@ -14,29 +14,29 @@ using System.Threading.Tasks;
 
 namespace MRMongoTools.Component
 {
-    public abstract class Repository<T> : IRepository<T>
+    public abstract class MRRepository<T> : IRepository<T>
         where T : class, IEntity, new()
     {
         protected IMongoClient _client { get; set; }
         protected IMongoDatabase _database { get; set; }
         protected IMongoCollection<T> _collection { get; set; }
 
-        public Repository(MRDatabaseConnectionSettings settings) : this(settings.ConnectionString, settings.Database) { }
-        public Repository(string connection, string database) : this(new MongoClient(connection), database) { }
-        public Repository(IMongoClient client, string database) : this(client, client.GetDatabase(database)) { }
-        public Repository(IMongoClient client, IMongoDatabase database)
+        public MRRepository(MRDatabaseConnectionSettings settings) : this(settings.ConnectionString, settings.Database) { }
+        public MRRepository(string connection, string database) : this(new MongoClient(connection), database) { }
+        public MRRepository(IMongoClient client, string database) : this(client, client.GetDatabase(database)) { }
+        public MRRepository(IMongoClient client, IMongoDatabase database)
         {
             _client = client;
             _database = database;
 
             var collectionAttr = (CollectionAttr)Attribute.GetCustomAttribute(typeof(T), typeof(CollectionAttr));
-            var collectionName = collectionAttr == null && !string.IsNullOrWhiteSpace(collectionAttr.Name) ? nameof(T) : collectionAttr.Name;
+            var collectionName = collectionAttr == null && !string.IsNullOrWhiteSpace(collectionAttr?.Name) ? nameof(T) : collectionAttr.Name;
 
             _collection = _database.GetCollection<T>(collectionName);
         }
 
         public static R Factory<R>(string collection, string database)
-            where R : Repository<T>, IRepository<T> => (R)Activator.CreateInstance(typeof(R), new object[] { collection, database });
+            where R : MRRepository<T>, IRepository<T> => (R)Activator.CreateInstance(typeof(R), new object[] { collection, database });
 
         protected virtual QueryBuilder<T> _builder => new QueryBuilder<T>();
 
