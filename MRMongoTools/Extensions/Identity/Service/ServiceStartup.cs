@@ -35,6 +35,10 @@ namespace MRMongoTools.Extensions.Identity.Service
             services.AddTransient<MRSignInManager<TUser>>();
             services.AddSingleton<MRTokenManager<TUser>>();
 
+            services.AddSingleton<MRTokenManager>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {

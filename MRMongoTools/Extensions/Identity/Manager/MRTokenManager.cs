@@ -58,5 +58,21 @@ namespace MRMongoTools.Extensions.Identity.Manager
 
         protected virtual ClaimsIdentity GetIdentity(TUser user, IEnumerable<string> roles)
             => new ClaimsIdentity(GetClaims(user, roles), "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+
+        protected virtual ClaimsIdentity GetIdentity(MRUser user, IEnumerable<string> roles)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(MRTokenClaims.Email, user.Email),
+                new Claim(MRTokenClaims.FirstName, user.FirstName),
+                new Claim(MRTokenClaims.LastName, user.LastName),
+                new Claim(MRTokenClaims.Id, user.Id),
+            };
+
+            if(roles != null && roles.Any())
+                claims.AddRange(roles.Select(x => new Claim(MRTokenClaims.Role, x)));
+
+            return new ClaimsIdentity(claims, "Token", MRTokenClaims.Email, MRTokenClaims.Role);
+        }
     }
 }
